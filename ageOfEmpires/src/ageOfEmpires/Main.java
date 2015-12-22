@@ -77,79 +77,107 @@ public class Main extends JFrame{
 	}
 	
 	public void moveUp(){
+		if(zeroYCoord < 0){
 		zeroYCoord += 1;
+		}
 	}
 	public void moveDown(){
-		zeroYCoord -= 1;
+		if(zeroYCoord > height-map.getYSize()){
+			zeroYCoord -= 1;
+		}
 	}
 	public void moveRight(){
-		zeroXCoord -= 1;
+		if(zeroXCoord > width-map.getXSize()){
+			zeroXCoord -= 1;
+		}
 	}
 	public void moveLeft(){
-		zeroXCoord += 1;
+		if(zeroXCoord < 0){
+			zeroXCoord += 1;
+		}
 	}
 	public void moveUR(){
-		zeroYCoord += 1/1/root2;
-		zeroXCoord -= 1/root2;
+		if(zeroYCoord >= 0){
+			moveRight();
+		}else if(zeroXCoord <= width-map.getXSize()){
+			moveUp();
+		}else{
+			zeroYCoord += 1/1/root2;
+			zeroXCoord -= 1/root2;
+		}
 	}
 	public void moveUL(){
-		zeroYCoord += 1/root2;
-		zeroXCoord += 1/root2;
+		if(zeroYCoord >= 0){
+			moveLeft();
+		}else if(zeroXCoord >= 0){
+			moveUp();
+		}else{
+			zeroYCoord += 1/root2;
+			zeroXCoord += 1/root2;
+		}
 	}
 	public void moveDR(){
-		zeroYCoord -= 1/root2;
-		zeroXCoord -= 1/root2;
+		if(zeroYCoord <= height-map.getYSize()){
+			moveRight();
+		}else if(zeroXCoord <= width-map.getXSize()){
+			moveDown();
+		}else{
+			zeroYCoord -= 1/root2;
+			zeroXCoord -= 1/root2;
+		}
 	}
 	public void moveDL(){
-		zeroYCoord -= 1/root2;
-		zeroXCoord += 1/root2;
+		if(zeroYCoord <= height-map.getYSize()){
+			moveLeft();
+		}else if(zeroXCoord >= 0){
+			moveDown();
+		}else{
+			zeroYCoord -= 1/root2;
+			zeroXCoord += 1/root2;
+		}
 	}
 	
 	private void update(){
 		
-		if(updatetime <= System.currentTimeMillis()){
-			
-			if(input.isKeyDown(KeyEvent.VK_W)){
-				if(input.isKeyDown(KeyEvent.VK_D)){
-					moveUR();
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					moveUL();
-				}else{
-					moveUp();
-				}
-			}else if(input.isKeyDown(KeyEvent.VK_S)){
-				if(input.isKeyDown(KeyEvent.VK_D)){
-					moveDR();
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					moveDL();
-				}else{
-					moveDown();
-				}
-			}else if(input.isKeyDown(KeyEvent.VK_D)){
-				moveRight();
+		if(input.isKeyDown(KeyEvent.VK_W)){
+			if(input.isKeyDown(KeyEvent.VK_D)){
+				moveUR();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
-				moveLeft();
-			}else
-			
-			updatetime = System.currentTimeMillis() + 10;
-			
+				moveUL();
+			}else{
+				moveUp();
+			}
+		}else if(input.isKeyDown(KeyEvent.VK_S)){
+			if(input.isKeyDown(KeyEvent.VK_D)){
+				moveDR();
+			}else if(input.isKeyDown(KeyEvent.VK_A)){
+				moveDL();
+			}else{
+				moveDown();
+			}
+		}else if(input.isKeyDown(KeyEvent.VK_D)){
+			moveRight();
+		}else if(input.isKeyDown(KeyEvent.VK_A)){
+			moveLeft();
 		}
 		
+		if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
+			System.exit(0);
+		}
+		
+		updatetime = System.currentTimeMillis() + 10;
+		
 	}
-
+		
 	private void draw(){
 
 		Graphics g = getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 		Image offImage = createImage(map.getXSize(), map.getYSize());
 		Graphics offGraphics = offImage.getGraphics();
-		offGraphics.setColor(Color.BLUE);
-		offGraphics.fillRect((int)-zeroXCoord, (int)-zeroYCoord, width, height);
-		offGraphics.setColor(Color.orange);
-		offGraphics.drawRect(0, 0, width+1, height+1);
-		offGraphics.setColor(Color.black);
-		offGraphics.fillRect(width/2-10, height/2-10, 20, 20);
-		g2d.drawImage(offImage, (int)zeroXCoord, (int)zeroYCoord, width, height, null);
+		offGraphics.fillRect(0, 0, map.getXSize(), map.getYSize());
+		map.draw(offGraphics);
+		g2d.drawImage(offImage, (int)zeroXCoord, (int)zeroYCoord, map.getXSize(), map.getYSize(), null);
 		
 	}
 	
