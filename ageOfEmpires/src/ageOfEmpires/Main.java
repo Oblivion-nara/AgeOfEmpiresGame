@@ -1,11 +1,13 @@
 package ageOfEmpires;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.Random;
@@ -19,10 +21,12 @@ public class Main extends JFrame{
 	public static double zeroXCoord,zeroYCoord;
 	static boolean running = false;
 	
-	private long updatetime;
-	
 	static final double root2 = Math.sqrt(2);
 	static Random gen = new Random();
+	
+	private int mapSize = 0;
+	
+	private Image gameMap;
 	
 	private InputHandler input;
 	private Map map;
@@ -36,7 +40,13 @@ public class Main extends JFrame{
 	
 	private void run(){
 		initialise();
+		while(mapSize == 0){
+			mapSize();
+		}
+		int count = 0;
 		while(running){
+			System.out.println(count);
+			count++;
 			long beforeTime = System.currentTimeMillis();
 			update();
 			draw();
@@ -55,6 +65,58 @@ public class Main extends JFrame{
 		
 	}
 	
+	private void mapSize(){
+
+		Graphics2D g2d = (Graphics2D)(getGraphics());
+		Image offImage = createImage(width,height);
+		Graphics offGraphics = offImage.getGraphics();
+		offGraphics.setColor(Color.BLACK);
+		offGraphics.fillRect(0, 0, width, height);
+		offGraphics.setColor(Color.gray);
+		Font j= new Font("Arial", Font.BOLD, 50);
+		
+		offGraphics.setFont(j);
+		offGraphics.drawString("Choose the map size.", width/2-(int)(26*"Choose the map size.".length()/2.0), 150);
+		offGraphics.fillRoundRect((width/2)-250, (height/4), 500, 200, 10000, 10000);
+		offGraphics.fillRoundRect((width/2)-250, (2*height/4), 500, 200, 10000, 10000);
+		offGraphics.fillRoundRect((width/2)-250, (3*height/4), 500, 200, 10000, 10000);
+		offGraphics.setColor(Color.orange);
+		offGraphics.drawString("small", width/2-(int)(26*"small".length()/2.0), height/4 + 100);
+		offGraphics.drawString("medium", width/2-(int)(32*"medium".length()/2.0), 2*height/4 + 100);
+		offGraphics.drawString("large", width/2-(int)(26*"large".length()/2.0), 3*height/4 + 100);
+
+		
+		if(input.isMouseDown(1)){
+			if((new Rectangle(width/2 - 250,height/4,500,200)).contains(input.getMousePositionOnScreen())){
+				mapSize = 1;
+				offGraphics.setColor(Color.BLACK);
+				offGraphics.fillRect(0, 0, width, height);
+				offGraphics.setColor(Color.orange);
+				offGraphics.drawString("Loading...", width/2-(400), height/2);
+			}else if((new Rectangle(width/2 - 250,2*height/4,500,200)).contains(input.getMousePositionOnScreen())){
+				mapSize = 2;
+				offGraphics.setColor(Color.BLACK);
+				offGraphics.fillRect(0, 0, width, height);
+				offGraphics.setColor(Color.orange);
+				offGraphics.drawString("Loading...", width/2-(400), height/2);
+			}else if((new Rectangle(width/2 - 250,3*height/4,500,200)).contains(input.getMousePositionOnScreen())){
+				mapSize = 3;
+				offGraphics.setColor(Color.BLACK);
+				offGraphics.fillRect(0, 0, width, height);
+				offGraphics.setColor(Color.orange);
+				offGraphics.drawString("Loading...", width/2-(400), height/2);
+			}
+		}
+		
+		g2d.drawImage(offImage,0,0,width,height,null);
+		if(mapSize != 0){
+			map = new Map(mapSize);
+			gameMap = createImage(map.getXSize(), map.getYSize());
+			Graphics gameGraphics = gameMap.getGraphics();
+			map.draw(gameGraphics);
+		}
+	}
+	
 	private void initialise(){
 		running = true;
 		setTitle("Age of Empires");
@@ -62,17 +124,14 @@ public class Main extends JFrame{
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
-		System.out.println(width+","+height);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);
 		device.setFullScreenWindow(this);
 		setVisible(running);
 		setResizable(false);
-		input = new InputHandler(this);
-		map = new Map();
 		zeroXCoord = 0;
 		zeroYCoord = 0;
-		updatetime = System.currentTimeMillis() + 10;
+		input = new InputHandler(this);
 		
 	}
 	
@@ -82,14 +141,14 @@ public class Main extends JFrame{
 		}
 	}
 	public void moveDown(){
-		if(zeroYCoord > height-map.getYSize()){
+		//if(zeroYCoord > height-map.getYSize()){
 			zeroYCoord -= 1;
-		}
+		//}
 	}
 	public void moveRight(){
-		if(zeroXCoord > width-map.getXSize()){
+		//if(zeroXCoord > width-map.getXSize()){
 			zeroXCoord -= 1;
-		}
+		//}
 	}
 	public void moveLeft(){
 		if(zeroXCoord < 0){
@@ -165,19 +224,13 @@ public class Main extends JFrame{
 			System.exit(0);
 		}
 		
-		updatetime = System.currentTimeMillis() + 10;
-		
 	}
 		
 	private void draw(){
 
-		Graphics g = getGraphics();
-		Graphics2D g2d = (Graphics2D) g;
-		Image offImage = createImage(map.getXSize(), map.getYSize());
-		Graphics offGraphics = offImage.getGraphics();
-		offGraphics.fillRect(0, 0, map.getXSize(), map.getYSize());
-		map.draw(offGraphics);
-		g2d.drawImage(offImage, (int)zeroXCoord, (int)zeroYCoord, map.getXSize(), map.getYSize(), null);
+		Graphics2D g2d = (Graphics2D)(getGraphics());
+		
+		g2d.drawImage(gameMap, (int)zeroXCoord, (int)zeroYCoord, map.getXSize(), map.getYSize(), null);
 		
 	}
 	
