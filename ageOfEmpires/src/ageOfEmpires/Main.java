@@ -113,8 +113,13 @@ public class Main extends JFrame{
 		g2d.drawImage(offImage,0,0,width,height,null);
 		if(mapSize != 0){
 			map = new Map(mapSize);
-			gameMap = createImage(map.getXSize(), map.getYSize());
+			int x = map.getXSize();
+			int y = map.getYSize();
+			gameMap = createImage(x, y);
 			Graphics gameGraphics = gameMap.getGraphics();
+			zeroXCoord = (Main.width/2)-(x/2);
+			zeroYCoord = (Main.height/2)-(y/2);
+			g2d.clearRect(0, 0, width, height);
 			map.draw(gameGraphics);
 		}
 	}
