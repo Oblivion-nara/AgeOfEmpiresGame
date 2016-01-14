@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 
+import utils.ResourceLoader;
+
 public class Map{
 
 	private Point[][] mapPics;   //which mapSprite to use, as a point

@@ -14,6 +14,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import utils.InputHandler;
+
 public class Main extends JFrame{
 	
 	private static final long serialVersionUID = 1L;
@@ -141,14 +143,14 @@ public class Main extends JFrame{
 		}
 	}
 	public void moveDown(){
-		//if(zeroYCoord > height-map.getYSize()){
+		if(zeroYCoord > height-map.getYSize()){
 			zeroYCoord -= 1;
-		//}
+		}
 	}
 	public void moveRight(){
-		//if(zeroXCoord > width-map.getXSize()){
+		if(zeroXCoord > width-map.getXSize()){
 			zeroXCoord -= 1;
-		//}
+		}
 	}
 	public void moveLeft(){
 		if(zeroXCoord < 0){
