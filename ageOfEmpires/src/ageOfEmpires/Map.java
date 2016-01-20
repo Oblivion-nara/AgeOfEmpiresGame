@@ -115,7 +115,6 @@ public class Map{
 				g2.fillRect(i*16, j*16, 16, 16);;
 			}
 		}
-		
 	}
 }
 
