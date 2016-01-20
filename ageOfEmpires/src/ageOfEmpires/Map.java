@@ -37,7 +37,7 @@ public class Map{
 			break;
 		case 2:
 			xSize = MathHelper.ceiling(3*MathHelper.ceiling(Main.width,2),160)*160;
-			xSize = MathHelper.ceiling(3*MathHelper.ceiling(Main.height,2),160)*160;
+			ySize = MathHelper.ceiling(3*MathHelper.ceiling(Main.height,2),160)*160;
 			break;
 		case 3:
 			xSize = MathHelper.ceiling(2*Main.width,160)*160;
@@ -69,52 +69,71 @@ public class Map{
 		return ySize;
 	}
 	
-	
-	
-	public void draw(Graphics g){
+	public void draw(Graphics2D g2){
 		
-		Graphics2D g2 = (Graphics2D)g;
+//		Graphics2D g2 = (Graphics2D)g;
 		/*for (int i = 0; i < mapPics.length; i++) {
 			for (int j = 0; j < mapPics[0].length; j++) {
 					g2.drawImage(mapSprites[mapPics[i][j].x][mapPics[i][j].y], i*16, j*16, null);
 				
 			}
-		}
+		}*/
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0, 0, xSize, ySize);
+		
+		
+		
+		
+		
 		g2.setColor(Color.blue);
 		int y = 0;
 		int width = 10;
 		int x = Main.gen.nextInt(xSize);
 		do{
 			
-			int ychange = Main.gen.nextInt(10);
-			x += (int)(Main.gen.nextGaussian()*5);
-			width += (int)(Main.gen.nextGaussian()*5);
-			if(width < 5) width = 5;
-			if(y+ychange > ySize) y = ySize;
-			if(x < 30){
-				x = 30;
-			}else if(x < xSize - 30){
-				x = xSize - 30;
-			}
-			for (int i = y; i < y+ychange; i++) {
-				g2.drawLine(x-width, i, x+width, i);
+			int ychange = Main.gen.nextInt(20)+1;
+			int xchange = (int)(Main.gen.nextGaussian()*20);
+			int wchange = (int)(Main.gen.nextGaussian()*20);
+			
+			if(width + wchange < 5){ 
+				width = 5;
+				wchange = 0;
 			}
 			
-		}while(y <= ySize);*/
-		for(int i = 0; i < noise.length; i++){
-			for(int j = 0; j < noise[0].length; j++){
-				if(noise[i][j] > 0.4 && noise[i][j] < 0.5){
-					g2.setColor(Color.blue);
-				}else if(noise[i][j] > 0.95){
-					g2.setColor(Color.white);
-				}else if(noise[i][j] > 0.7){
-					g2.setColor(Color.gray);
-				}else{
-					g2.setColor(Color.green);
-				}
-				g2.fillRect(i*16, j*16, 16, 16);;
+			if(y+ychange > ySize){
+				y = ySize;
+				ychange = 0;
 			}
-		}
+			
+			if(x+xchange < 30){
+				x = 30;
+				xchange = 0;
+			}else if(x+xchange > xSize - 30){
+				x = xSize - 30;
+				xchange = 0;
+			}
+			
+			double xstep = xchange/ychange;
+			double wstep = width/ychange;
+			
+			for (int i = y; i < y+ychange; i++) {
+				g2.drawLine(x-width, i, x+width, i);
+				x += xstep;
+				width += wstep; 
+			}
+			y += ychange;
+		}while(y <= ySize);
+		
+//		for(int i = 0; i < noise.length; i++){
+//			for(int j = 0; j < noise[0].length; j++){
+//				if(noise[i][j] < 0.53 && noise[i][j] > 0.47){
+//					g2.setColor(Color.blue);
+//				}else{
+//					g2.setColor(Color.green);
+//				}
+//				g2.fillRect(i*12, j*12, 12, 12);;
+//			}
+//		}
 	}
 }
 

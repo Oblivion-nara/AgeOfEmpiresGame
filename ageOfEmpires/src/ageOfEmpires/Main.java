@@ -113,7 +113,7 @@ public class Main extends JFrame{
 			int x = map.getXSize();
 			int y = map.getYSize();
 			gameMap = createImage(x, y);
-			Graphics gameGraphics = gameMap.getGraphics();
+			Graphics2D gameGraphics = (Graphics2D)(getGraphics());
 			zeroXCoord = (Main.width/2)-(x/2);
 			zeroYCoord = (Main.height/2)-(y/2);
 			g2d.clearRect(0, 0, width, height);
@@ -233,8 +233,8 @@ public class Main extends JFrame{
 	private void draw(){
 
 		Graphics2D g2d = (Graphics2D)(getGraphics());
-		
-		g2d.drawImage(gameMap, (int)zeroXCoord, (int)zeroYCoord, map.getXSize(), map.getYSize(), null);
+//		map.draw(g2d);
+		g2d.drawImage(gameMap, (int)0, (int)0, map.getXSize(), map.getYSize(), null);
 		
 	}
 	
