@@ -45,19 +45,16 @@ public class Main extends JFrame{
 		while(mapSize == 0){
 			mapSize();
 		}
-		int count = 0;
 		while(running){
-			System.out.println(count);
-			count++;
 			long beforeTime = System.currentTimeMillis();
 			update();
 			draw();
 			long afterTime = System.currentTimeMillis();
 			long diff = afterTime - beforeTime;
-			long waitTime = diff / 45;
+			long frameTime = 1000 / 1000;
 			try{
-				if(waitTime > 0){
-					Thread.sleep(waitTime);
+				if(diff < frameTime){
+					Thread.sleep(frameTime - diff);
 				}
 			}catch (Exception e){
 				e.printStackTrace();
